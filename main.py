@@ -4,8 +4,6 @@ import json
 from pymediainfo import MediaInfo
 
 # Função para ler o checkpoint e determinar onde retomar
-
-
 def carregar_checkpoint():
     if os.path.exists("checkpoint.json"):
         with open("checkpoint.json", "r", encoding="utf-8") as f:
@@ -14,17 +12,13 @@ def carregar_checkpoint():
     return None
 
 # Função para salvar o checkpoint do último arquivo processado
-
-
 def salvar_checkpoint(ultimo_arquivo):
     checkpoint = {"ultimo_arquivo": ultimo_arquivo}
     with open("checkpoint.json", "w", encoding="utf-8") as f:
         json.dump(checkpoint, f, ensure_ascii=False, indent=4)
 
 # Função principal para limpar e melhorar os vídeos
-
-
-def limpar_e_melhorar_videos(pasta_videos):
+def limpar_melhorar_videos(pasta_videos):
     # Carrega o último arquivo processado
     ultimo_arquivo_processado = carregar_checkpoint()
 
@@ -119,9 +113,8 @@ def limpar_e_melhorar_videos(pasta_videos):
     with open("resultados.json", "w", encoding="utf-8") as f:
         json.dump(resultados, f, ensure_ascii=False, indent=4)
 
-
 # Solicita o caminho da pasta ao usuário
 if __name__ == "__main__":
     pasta_videos = input(
         "Digite o caminho da pasta raiz contendo os vídeos: ").strip()
-    limpar_e_melhorar_videos(pasta_videos)
+    limpar_melhorar_videos(pasta_videos)

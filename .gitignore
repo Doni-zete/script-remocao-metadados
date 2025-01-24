@@ -1,2 +1,4 @@
-/.venv
+/venv
 /resultados.json
+checkpoint.json
+/checkpoint.json
