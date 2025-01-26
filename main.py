@@ -17,8 +17,9 @@ def salvar_checkpoint(ultimo_arquivo):
     with open("checkpoint.json", "w", encoding="utf-8") as f:
         json.dump(checkpoint, f, ensure_ascii=False, indent=4)
 
-# Função principal para limpar e melhorar os vídeos
-def limpar_melhorar_videos(pasta_videos):
+# Função para melhorar e redimensionar os vídeos para formato vertical (9:16) para plataformas como Instagram, TikTok e YouTube Shorts
+# Alterado para 1080x1920 (vertical)
+def limpar_melhorar_videos(pasta_videos, resolucao="1080x1920"):
     # Carrega o último arquivo processado
     ultimo_arquivo_processado = carregar_checkpoint()
 
@@ -41,12 +42,14 @@ def limpar_melhorar_videos(pasta_videos):
                         media_info_before = MediaInfo.parse(file_path)
                         metadados_antes = media_info_before.to_data()
 
-                        # Comando para limpar metadados e melhorar a qualidade usando ffmpeg
+                        # Comando para limpar metadados, melhorar a qualidade e redimensionar a resolução para formato vertical
                         temp_file_path = file_path + ".temp"
                         comando_ffmpeg = [
                             "ffmpeg", "-i", file_path, "-map_metadata", "-1",
                             "-c:v", "libx264", "-crf", "18", "-preset", "slow",  # Melhora a qualidade do vídeo
                             "-c:a", "aac", "-b:a", "192k",  # Melhora a qualidade do áudio
+                            # Redimensiona e ajusta o vídeo para 1080x1920
+                            "-vf", f"scale={resolucao}:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2",
                             "-f", "mp4", temp_file_path,
                             "-metadata", "title=", "-metadata", "author=", "-metadata", "comment=", "-metadata", "description=", "-metadata", "creation_time=",
                             "-metadata:s:v", "title=", "-metadata:s:v", "comment=", "-metadata:s:a", "title=", "-metadata:s:a", "comment="
@@ -104,7 +107,6 @@ def limpar_melhorar_videos(pasta_videos):
                             f"Erro inesperado ao processar '{file_path}': {e}")
                         resultados.append(resultado)
 
-                    # Após processar o vídeo, continuar para o próximo
                 else:
                     print(
                         f"Pulando o arquivo {file_path}, pois ainda não foi atingido o último arquivo processado")
@@ -112,6 +114,7 @@ def limpar_melhorar_videos(pasta_videos):
     # Salvar os resultados em um arquivo JSON
     with open("resultados.json", "w", encoding="utf-8") as f:
         json.dump(resultados, f, ensure_ascii=False, indent=4)
+
 
 # Solicita o caminho da pasta ao usuário
 if __name__ == "__main__":
