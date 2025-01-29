@@ -17,11 +17,26 @@ def salvar_checkpoint(ultimo_arquivo):
     with open("checkpoint.json", "w", encoding="utf-8") as f:
         json.dump(checkpoint, f, ensure_ascii=False, indent=4)
 
+# Função para carregar o histórico de vídeos processados
+def carregar_historico():
+    if os.path.exists("historico_processados.json"):
+        with open("historico_processados.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+# Função para salvar o histórico de vídeos processados
+def salvar_historico(historico):
+    with open("historico_processados.json", "w", encoding="utf-8") as f:
+        json.dump(historico, f, ensure_ascii=False, indent=4)
+
 # Função para melhorar e redimensionar os vídeos para formato vertical (9:16) para plataformas como Instagram, TikTok e YouTube Shorts
 # Alterado para 1080x1920 (vertical)
 def limpar_melhorar_videos(pasta_videos, resolucao="1080x1920"):
     # Carrega o último arquivo processado
     ultimo_arquivo_processado = carregar_checkpoint()
+
+    # Carrega o histórico dos vídeos processados
+    historico_processados = carregar_historico()
 
     resultados = []
     iniciar_processamento = True  # Controla se devemos começar o processamento
@@ -30,6 +45,11 @@ def limpar_melhorar_videos(pasta_videos, resolucao="1080x1920"):
         for file in files:
             if file.endswith(".mp4"):
                 file_path = os.path.join(root, file)
+
+                # Verifica se o nome do arquivo já foi processado, se sim, ignora
+                if file in historico_processados:
+                    print(f"Vídeo '{file}' já processado. Pulando...")
+                    continue
 
                 # Inicia o processamento a partir do último arquivo, ou começa do primeiro vídeo
                 if ultimo_arquivo_processado and file_path == ultimo_arquivo_processado:
@@ -94,8 +114,12 @@ def limpar_melhorar_videos(pasta_videos, resolucao="1080x1920"):
 
                         resultados.append(resultado)
 
-                        # Salva o checkpoint a cada vídeo processado com sucesso
+                        # Adiciona o vídeo ao histórico
+                        historico_processados.append(file)
+
+                        # Salva o checkpoint e o histórico
                         salvar_checkpoint(file_path)
+                        salvar_historico(historico_processados)
 
                     except Exception as e:
                         resultado = {
@@ -110,6 +134,13 @@ def limpar_melhorar_videos(pasta_videos, resolucao="1080x1920"):
                 else:
                     print(
                         f"Pulando o arquivo {file_path}, pois ainda não foi atingido o último arquivo processado")
+
+    # Exibe o último vídeo processado
+    if resultados:
+        ultimo_video = resultados[-1]
+        print("\nÚltimo vídeo processado:")
+        print(f"Arquivo: {ultimo_video['arquivo']}")
+        print(f"Status: {ultimo_video['status']}")
 
     # Salvar os resultados em um arquivo JSON
     with open("resultados.json", "w", encoding="utf-8") as f:
