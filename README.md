@@ -14,7 +14,7 @@ Este guia contém os passos necessários para criar e ativar um ambiente virtual
 Use o comando `cd` para navegar até o diretório onde você deseja criar o ambiente virtual. Exemplo:
 
 ```bash
-cd caminho/para/diretorio
+cd /e/shoppe/script-remocao-metadados
 ```
 ### 3. Criar o Ambiente Virtual
 
@@ -28,6 +28,7 @@ python -m venv venv
 ```bash
 source venv/Scripts/activate
 ```
+
 
 
 ### 5. Instalar Pacotes no Ambiente Virtual
