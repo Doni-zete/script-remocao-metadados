@@ -7,3 +7,10 @@ v1.txt
 v2.txt
 README.md
 ler.txt
+/uploads
+log_temp.txt
+src/__pycache__/processamento.cpython-310.pyc
+src/utils/__pycache__/__init__.cpython-310.pyc
+src/__pycache__/server.cpython-310.pyc
+src/utils/__pycache__/metadados.cpython-310.pyc
+src/utils/__pycache__/ffmpeg.cpython-310.pyc
