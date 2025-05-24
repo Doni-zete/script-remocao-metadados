@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Processador de Vídeos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Processador de Vídeos</h2>
+    <form id="videoForm" onsubmit="event.preventDefault(); enviar();">
+      <div class="input-group">
+        <label for="videoFolder">Escolher vídeos (pasta):</label>
+        <input type="file" id="videoFolder" webkitdirectory directory multiple onchange="mostrarCaminhos()">
+      </div>
+      <div class="input-group">
+        <label for="imageFile">Escolher imagem:</label>
+        <input type="file" id="imageFile" accept="image/*" onchange="mostrarCaminhos()">
+      </div>
+      <div id="logMsg"></div>
+      <button type="submit">Enviar</button>
+    </form>
+    {# <div id="result"></div> #}
+    <div id="progresso"></div>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
